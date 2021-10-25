@@ -1,3 +1,4 @@
+import sys
 import json
 import pandas as pd
 
@@ -15,15 +16,16 @@ def save_games(values, columns):
     df.to_csv("games.csv")
 
 
-if __name__ == '__main__':
+def read_cards():
     starter_df = pd.read_csv("starter.csv", index_col="name", delimiter="\t")
     with open("data/cards.json") as f:
         raw_data = json.load(f)
-    cards = []
+    monsters, summoners = [], []
     for d in raw_data:
         if d["type"] == "Monster":
-            cards.append(
+            monsters.append(
                 card.Monster(
+                    d["id"],
                     d["name"],
                     d["color"],
                     d["stats"]["mana"],
@@ -37,11 +39,42 @@ if __name__ == '__main__':
                 )
             )
         elif d["type"] == "Summoner":
-            card.Summoner(
+            summoners.append(card.Summoner(
                 d["name"],
                 d["color"],
                 d["stats"]["abilities"] if "abilities" in d["stats"] else [],
                 d["is_starter"]
-            )
+            ))
+    return monsters, summoners
 
-    print(len(results))
+
+def format_games(games, deck):
+    df = pd.DataFrame(columns=["color", "1", "2", "3", "4", "5", "6", "sum(mana)"])
+    for game in games:
+        winning_team = game["winner"]
+        row = {"color": winning_team["color"]}
+        mana = 0
+        for i, monster in enumerate(winning_team["monsters"]):
+            row[f"{i + 1}"] = deck.get_card_by_id(monster["card_id"]).name
+            mana += deck.get_card_by_id(monster["card_id"]).mana
+        row["sum(mana)"] = mana
+        df = df.append(row, ignore_index=True)
+    return df
+
+
+if __name__ == '__main__':
+    cards, summoners = read_cards()
+    deck = card.Deck(cards)
+    with open("games.json") as f:
+        games_df = format_games(json.load(f)["games"], deck)
+    games_df.to_csv("games.csv", index=False)
+    engine = strategy.Strategy(cards)
+    while True:
+        try:
+            color_input = input("Color : ")
+            mana_cap = int(input("Mana cap : "))
+            selection = engine.get_deck(mana_cap, color_input)
+            for c in selection:
+                print(f"Name: {c.name}, Cost: {c.mana}")
+        except (EOFError, KeyboardInterrupt):
+            sys.exit(1)

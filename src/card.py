@@ -1,5 +1,6 @@
 class Monster:
-    def __init__(self, name, color, mana, attack, ranged, armor, health, speed, abilities, is_starter):
+    def __init__(self, card_id, name, color, mana, attack, ranged, armor, health, speed, abilities, is_starter):
+        self._id = card_id
         self._name = name
         self._color = color
         self._mana = mana
@@ -12,6 +13,10 @@ class Monster:
         self._is_starter = is_starter
         self._level = 0
         self._max_level = len(self._mana) - 1
+
+    @property
+    def id(self):
+        return self._id
 
     @property
     def name(self):
@@ -113,3 +118,13 @@ class Summoner:
     @property
     def is_starter(self):
         return self._is_starter
+
+
+class Deck:
+    def __init__(self, cards):
+        self._cards = cards
+
+    def get_card_by_id(self, card_id):
+        for c in self._cards:
+            if c.id == card_id:
+                return c
