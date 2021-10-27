@@ -124,6 +124,10 @@ class Deck:
     def __init__(self, cards):
         self._cards = cards
 
+    @property
+    def cards(self):
+        return self._cards
+
     def get_card_by_id(self, card_id):
         for c in self._cards:
             if c.id == card_id:
