@@ -4,7 +4,7 @@ import json
 import pandas as pd
 from multiprocessing import Pool
 
-from src import card, api, strategy
+from src import card, api, strategy, browser
 
 
 def save_scoring(values):
@@ -158,9 +158,10 @@ def format_games(games, deck):
 
 
 if __name__ == '__main__':
+    bot = browser.Bot()
     cards, summoners = read_cards()
     deck = card.Deck(cards)
-    reread = input("Refresh games from Splinterlands API ? ")
+    reread = False  # input("Refresh games from Splinterlands API ? ")
     if reread in ["true", "True"]:
         opponents, games = get_opponents_from_player("tantalid")
         with open("games.json", "w") as f:
@@ -172,6 +173,7 @@ if __name__ == '__main__':
         with open("games.json") as f:
             games = json.load(f)["games"]
     engine = strategy.Strategy(deck, games)
+    bot.run(engine)
     while True:
         try:
             color_input = input("Color : ")
