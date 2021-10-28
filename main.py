@@ -166,7 +166,7 @@ def str2bool(string):
 if __name__ == '__main__':
     #bot = browser.Bot()
     cards, summoners = read_cards()
-    deck = card.Deck(cards)
+    deck = card.Deck(cards, summoners)
     reread = str2bool(input("Refresh games from Splinterlands API ? "))
     if reread:
         opponents, games = get_opponents_from_player("tantalid")
