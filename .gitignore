@@ -1,5 +1,7 @@
 **pycache**
 .idea
 *.csv
+!starter.csv
 *.json
+!data/cards.json
 ~$assistant.xlsx
