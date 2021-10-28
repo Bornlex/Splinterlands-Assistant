@@ -157,12 +157,18 @@ def format_games(games, deck):
     return df
 
 
+def str2bool(string):
+    if string in ["true", "True", "1"]:
+        return True
+    return False
+
+
 if __name__ == '__main__':
-    bot = browser.Bot()
+    #bot = browser.Bot()
     cards, summoners = read_cards()
     deck = card.Deck(cards)
-    reread = False  # input("Refresh games from Splinterlands API ? ")
-    if reread in ["true", "True"]:
+    reread = str2bool(input("Refresh games from Splinterlands API ? "))
+    if reread:
         opponents, games = get_opponents_from_player("tantalid")
         with open("games.json", "w") as f:
             json.dump({"games": games}, f)
@@ -173,11 +179,17 @@ if __name__ == '__main__':
         with open("games.json") as f:
             games = json.load(f)["games"]
     engine = strategy.Strategy(deck, games)
-    bot.run(engine)
+    #bot.run(engine)
     while True:
         try:
-            color_input = input("Color : ")
-            mana_cap = int(input("Mana cap : "))
+            mana_cap = int(input("Mana cap: "))
+            auto_choose = str2bool(input("Auto choose color: "))
+            if auto_choose:
+                color_input = engine.get_best_color(mana_cap)
+                summoner = deck.get_summoner_by_color(color_input)
+                print(f"Auto chose '{color_input}' -> '{summoner.name}'")
+            else:
+                color_input = input("Color: ")
             selection = engine.get_team(mana_cap, color_input)
             for c in selection:
                 print(f"Name: {c.name}, Cost: {c.mana}")

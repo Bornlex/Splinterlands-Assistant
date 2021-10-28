@@ -42,10 +42,17 @@ class Bot:
         time.sleep(3)
         self.click(self.get_element_by(By.CLASS_NAME, "play-now-btn"))
         time.sleep(3)
+
+    def find_card_element(self, card):
+        return self.get_element_by(By.CSS_SELECTOR, f"div.card[card_detail_id='{card.id}']")
+
+    def battle(self, engine):
         self.click(self.get_element_by(By.ID, "battle_category_btn"))
-        time.sleep(15)
+        while not True:
+            time.sleep(5)
         self.click(self.get_element_by(By.CLASS_NAME, "btn--create-team"))
 
     def run(self, engine):
         self.open(self._url)
         self.login()
+        self.battle(engine)

@@ -1,2 +1,1 @@
-- implement strategy class
-- score should depend on team already in deck (if we already have 2 tanks, health should be less important in next choice)
+- choose color depending on mana cap

@@ -39,7 +39,7 @@ class Node:
         best_card = None
         children_id = None
         for c_id, c in self._children.items():
-            if c.heat > max_heat and mana_cap > c.mana:
+            if c.heat > max_heat and mana_cap >= c.mana:
                 max_heat = c.heat
                 best_card = c.card
                 children_id = c_id
@@ -78,5 +78,16 @@ class Strategy:
             root.add_children([self._deck.get_card_by_id(c["card_id"]) for c in winning_team["monsters"]])
         return root
 
-    def backtest(self, games):
-        pass
+    def get_best_color(self, mana_cap):
+        win_rate = {}
+        for game in self._games:
+            mana_used = sum([self._deck.get_card_by_id(m["card_id"]).mana for m in game["winner"]["monsters"]])
+            if mana_used in [mana_cap, mana_cap - 1]:
+                color_pick = game["winner"]["color"]
+                if color_pick in win_rate:
+                    win_rate[color_pick] += 1
+                else:
+                    win_rate[color_pick] = 1
+        best_win_rate = max(win_rate.values())
+        color = {v: k for k, v in win_rate.items()}[best_win_rate]
+        return color

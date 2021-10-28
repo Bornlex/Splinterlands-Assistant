@@ -121,8 +121,9 @@ class Summoner:
 
 
 class Deck:
-    def __init__(self, cards):
+    def __init__(self, cards, summoners):
         self._cards = cards
+        self._summoners = summoners
 
     @property
     def cards(self):
@@ -132,3 +133,8 @@ class Deck:
         for c in self._cards:
             if c.id == card_id:
                 return c
+
+    def get_summoner_by_color(self, color):
+        for s in self._summoners:
+            if s.color == color:
+                return s
