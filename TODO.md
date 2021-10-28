@@ -1,1 +1,1 @@
-- choose color depending on mana cap
+- calculer la proportion de victoire par champion en ajoutant aussi les equipes defaitistes dans l'arbre

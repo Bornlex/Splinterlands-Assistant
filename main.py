@@ -183,7 +183,8 @@ if __name__ == '__main__':
     while True:
         try:
             mana_cap = int(input("Mana cap: "))
-            auto_choose = str2bool(input("Auto choose color: "))
+            # auto_choose = str2bool(input("Auto choose color: "))
+            auto_choose = True
             if auto_choose:
                 color_input = engine.get_best_color(mana_cap)
                 summoner = deck.get_summoner_by_color(color_input)
