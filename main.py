@@ -150,6 +150,9 @@ def format_games(games, deck):
         row = {"color": winning_team["color"]}
         mana = 0
         for i, monster in enumerate(winning_team["monsters"]):
+            if deck.get_card_by_id(monster["card_id"]) is None:
+                print(f"The card with id '{monster['card_id']}' does not exist in the database, please add it.")
+                continue
             row[f"{i + 1}"] = deck.get_card_by_id(monster["card_id"]).name
             mana += deck.get_card_by_id(monster["card_id"]).mana
         row["sum(mana)"] = mana
@@ -169,7 +172,12 @@ if __name__ == '__main__':
     deck = card.Deck(cards, summoners)
     reread = str2bool(input("Refresh games from Splinterlands API ? "))
     if reread:
-        opponents, games = get_opponents_from_player("tantalid")
+        player_name = input("What is the name of the player you want to gather data from? ")
+        opponents, games = get_opponents_from_player(player_name)
+        if len(games) == 0:
+            print(f"No games found for player: {player_name}.")
+            print("Exiting.")
+            sys.exit(0)
         with open("games.json", "w") as f:
             json.dump({"games": games}, f)
         print(f"Formatting...")
@@ -183,7 +191,6 @@ if __name__ == '__main__':
     while True:
         try:
             mana_cap = int(input("Mana cap: "))
-            # auto_choose = str2bool(input("Auto choose color: "))
             auto_choose = True
             if auto_choose:
                 color_input = engine.get_best_color(mana_cap)

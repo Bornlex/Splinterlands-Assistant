@@ -65,7 +65,12 @@ class Strategy:
         color_filtered_games = [g for g in self._games if g["winner"]["color"] == color]
         filtered_games = []
         for game in color_filtered_games:
-            mana_used = sum([self._deck.get_card_by_id(m["card_id"]).mana for m in game["winner"]["monsters"]])
+            mana_used = 0
+            for m in game["winner"]["monsters"]:
+                card = self._deck.get_card_by_id(m["card_id"])
+                if not card:
+                    break
+                mana_used += card.mana
             if mana_used in [mana_cap, mana_cap - 1]:
                 filtered_games.append(game)
         tree = self.as_tree(sub_deck, filtered_games)
@@ -81,7 +86,12 @@ class Strategy:
     def get_best_color(self, mana_cap):
         win_rate = {}
         for game in self._games:
-            mana_used = sum([self._deck.get_card_by_id(m["card_id"]).mana for m in game["winner"]["monsters"]])
+            mana_used = 0
+            for m in game["winner"]["monsters"]:
+                card = self._deck.get_card_by_id(m["card_id"])
+                if not card:
+                    break
+                mana_used += card.mana
             if mana_used in [mana_cap, mana_cap - 1]:
                 color_pick = game["winner"]["color"]
                 if color_pick in win_rate:
