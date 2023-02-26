@@ -12,6 +12,8 @@ So reading the blockchain would show you battles played in the past, cards playe
 
 I then thought to myself: "But is my goal to play the game or to earn money?". This is where I started writing this little assistant so I would not have to play to earn money.
 
+Keep in mind that it is something that I wrote for myself. The code might be a bit unstable but it allowed me to have a very good win rate anyway ;).
+
 ## How does it work
 
 This program is a command line based tool that you use at the beginning of a battle.
