@@ -5,3 +5,4 @@
 *.json
 !data/cards.json
 ~$assistant.xlsx
+assistant.xlsx
